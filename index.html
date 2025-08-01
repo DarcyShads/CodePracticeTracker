@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Coding Questions Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Login</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="loginEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="loginPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-2">Login</button>
+                    </form>
+                    <div id="loginError" class="alert alert-danger mt-3 d-none"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Question Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Question</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm">
+                        <input type="hidden" id="editId">
+                        <div class="mb-3">
+                            <label for="editName" class="form-label">Question Name</label>
+                            <input type="text" class="form-control" id="editName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editLink" class="form-label">Question Link</label>
+                            <input type="url" class="form-control" id="editLink" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editConcept" class="form-label">Concept</label>
+                            <input type="text" class="form-control" id="editConcept" list="conceptsList" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editDate" class="form-label">Date</label>
+                            <input type="date" class="form-control" id="editDate" required>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <button type="button" id="deleteBtn" class="btn btn-danger">Delete</button>
+                        </div>
+                    </form>
+                    <div id="editError" class="alert alert-danger mt-3 d-none"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-3 mt-md-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 mb-md-4">
+            <h1 class="mb-2 mb-md-0">Coding Questions Tracker</h1>
+            <div id="authSection" class="w-md-auto">
+                <button id="loginBtn" class="btn btn-outline-primary w-100 w-md-auto">Login</button>
+            </div>
+        </div>
+
+        <!-- Add Question Form (hidden by default) -->
+        <div id="addQuestionCard" class="card mb-4 d-none">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Add New Question</h5>
+            </div>
+            <div class="card-body">
+                <form id="questionForm">
+                    <div class="mb-3">
+                        <label for="questionName" class="form-label">Question Name</label>
+                        <input type="text" class="form-control" id="questionName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="questionLink" class="form-label">Question Link</label>
+                        <input type="url" class="form-control" id="questionLink" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="questionConcept" class="form-label">Concept</label>
+                        <input type="text" class="form-control" id="questionConcept" list="conceptsList" required>
+                        <datalist id="conceptsList"></datalist>
+                    </div>
+                    <div class="mb-3">
+                        <label for="questionDate" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="questionDate" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-2">Add Question</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Filter Questions</h5>
+            </div>
+            <div class="card-body p-2 p-md-3">
+                <div class="row g-2">
+                    <div class="col-12 col-md-4">
+                        <label for="filterName" class="form-label">Search by Name</label>
+                        <input type="text" class="form-control" id="filterName" placeholder="Enter question name">
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label for="filterConcept" class="form-label">Filter by Concept</label>
+                        <select class="form-select" id="filterConcept">
+                            <option value="">All Concepts</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label for="filterDate" class="form-label">Filter by Date</label>
+                        <input type="date" class="form-control" id="filterDate">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Questions List -->
+        <div class="card">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Questions List</h5>
+                <span id="questionCount" class="badge bg-light text-dark">0 questions</span>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">#</th>
+                                <th>Question Name</th>
+                                <th class="d-none d-md-table-cell">Concept</th>
+                                <th class="d-none d-md-table-cell">Date</th>
+                                <th style="width: 100px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="questionsList">
+                            <tr>
+                                <td colspan="5" class="text-center py-4">Loading questions...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+
+    <!-- Your Firebase Config -->
+    <script src="firebase-config.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Your Scripts -->
+    <script src="script.js"></script>
+    <script src="config.js"></script>
+</body>
+
+</html>
